@@ -1,6 +1,7 @@
 import React from "react"
 import { 
   Platform,
+    StatusBar,
   StyleSheet
 
  } from "react-native"
@@ -47,7 +48,9 @@ class Navigators extends React.Component {
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         gestureEnabled: true,
                         gestureDirection: 'horizontal',
+                        headerStatusBarHeight:StatusBar.currentHeight,
                         headerStyle: {
+                            backgroundColor:"red",
                             ...Platform.select({
                               android: {
                                 elevation: 0,

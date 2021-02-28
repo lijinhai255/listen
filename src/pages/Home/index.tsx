@@ -48,6 +48,7 @@ class Home extends React.PureComponent<IProps> {
     return (
       <View>
         <Text>Hoem</Text>
+        <Text>121</Text>
         <Text>{loading}</Text>
         <Text>{loading===true?'正在请求中':""}</Text>
         <Text>{num}</Text>
