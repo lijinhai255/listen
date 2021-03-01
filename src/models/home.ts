@@ -3,10 +3,23 @@ import { call } from "react-native-reanimated"
 import {Reducer} from "redux"
 import { RootState } from "."
 
+import axios from "axios"
+const CAROUSEL_URL = '/mock/13/carousel'; // 轮播图
+const CHANNEL_URL = '/mock/13/guess'; // 猜你喜欢
+export interface ICarousel {
+    id:number,
+    image:string,
+    color:[string,string]
+}
+export interface IGuess{
+    id:string,
+    image:string,
+    title:string
+
+}
 
 export interface HomeState {
-    num:number,
-    loading:boolean
+    carousel:ICarousel[]
 }
 const action ={
     type:'add'
@@ -15,60 +28,36 @@ interface HomeModel extends Model{
     namespace: 'home';
     state: HomeState;
     reducers?:{
-        add:Reducer<HomeState>
-        setStatus:Reducer<HomeState>
+        setState:Reducer<HomeState>
     };
     effects?:{
-        asyncAdd:Effect
+        fetchCarousel:Effect
     }
 }
 const initialState ={
-    num:0,
-    loading:false
-}
-function delay(timeout:number){
-    return new Promise(resolve=>{
-        setTimeout(resolve,timeout)
-
-    })
+    carousel:[]
 }
 const homeModel:HomeModel ={
     namespace:'home',
     state:initialState,
     reducers:{
-        add(state=initialState,{payload}){
+        setState(state=initialState,{payload}){
             return {
                 ...state,
-                num:state?.num+payload.num
-            }
-        },
-        setStatus(state=initialState,{payload}){
-            console.log("jllll",payload.loading)
-            return {
-                ...state,
-                loading:payload.loading
+                ...payload
             }
         }
     },
     effects:{
-        *asyncAdd({payload},{call,put}){
-            // yield put({
-            //     type:"setStatus",
-            //     payload:{
-            //         loading:true
-            //     }
-            // })
-            yield call(delay,3000)
-            yield put({
-                type:"add",
-                payload
-            })
-            // yield put({
-            //     type:"setStatus",
-            //     payload:{
-            //         loading:false
-            //     }
-            // })
+        *fetchCarousel(_,{call,put}){
+           const {data} =  yield call(axios.get,CAROUSEL_URL)
+           console.log(data,"data-data-data")
+           yield put({
+            type: 'setState',
+            payload: {
+                carousel: data,
+            },
+          });
         }
     }
    
